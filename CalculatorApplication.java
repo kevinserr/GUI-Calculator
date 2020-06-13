@@ -17,16 +17,17 @@ import javafx.stage.Stage;
 
 public class CalculatorApplication extends Application {
 	
-	// Strings used for maths
+	// Strings used for math
 	String number1; 
 	String number2;
 	
+	// used to keep track of the screen's display
 	boolean resultIsShown = false;
 
 	// Object for calculations 
 	Calculation calc = new Calculation();
 	
-	// new gridpane
+	// new grid pane
 	GridPane pane = new GridPane();
 	
 	// screen is where the output and input will be shown
@@ -43,9 +44,10 @@ public class CalculatorApplication extends Application {
 	Button plusMinus = new Button("+/-");
 	Button decimal = new Button(".");
 	
+	// Used to set the prefer width and height of the buttons
 	VBox vBox = new VBox();	
 	
-	// array of buttons
+	// array of buttons used for the numbers
 	Button[] numberButtons;
 	
 	Button[] deleteButtons = {
@@ -70,21 +72,18 @@ public class CalculatorApplication extends Application {
 			"Multiplication", "Divison"};
 	
 	public void start(Stage primaryStage) throws Exception {	
-		printBooleanValues();
 			
 		Scene scene = new Scene(pane, 300,450);
-		
-		scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
 		
 		vBox.setPrefWidth(75);
 		vBox.setPrefHeight(75);
 		
-		// screen cannot be edited
+		// Set the screen so it cannot be edited
 		screen.setEditable(false);
 		screen.setMouseTransparent(true);
 		screen.setFocusTraversable(false);
 		
-		//TODO Find a way to append text at the start of the text so that RIGHT_TO_LEFT works
+		// add the screen to the scene
 		pane.add(screen, 0, 0, 4, 1);
 		
 		screen.setPrefWidth(34*4); screen.setPrefHeight(vBox.getPrefHeight());
@@ -98,21 +97,22 @@ public class CalculatorApplication extends Application {
 		// calls method that adds the buttons to the scene
 		addButtonsToScene();
 		
+		// calls method to set the prefered width and height
 		setMinWidthAndHeight();
 		
-		screen.setDisable(false);
-		
+		// calls method to add event listeners
 		addEventListeners();
 	
+		// add the scene to the stage in order to see
 		primaryStage.setScene(scene);
-		
-		multiply.setId("multButton");
-		
-		
+
 		primaryStage.show();
 		
 	}
 	
+	/**
+	 *	Makes the buttons each with a number from 0-9	
+	*/
 	private void populateButtons() {
 		String numbers= "0123456789";
 		
@@ -125,6 +125,9 @@ public class CalculatorApplication extends Application {
 		
 	}
 	
+	/*
+	 *	Adds the buttons to the screen in order for the user to use them	 
+	*/
 	private void addButtonsToScene() {	
 		int row = 2;
 		int col =2;
@@ -166,6 +169,12 @@ public class CalculatorApplication extends Application {
 		
 	}
 	
+	/*
+	 *	Sets the min width and height for each button used
+	 *	Makes them all the same size
+	 *	Method also sets the style for each of them to a font size of 24 and font 
+	 *	family of arial
+	*/
 	private void setMinWidthAndHeight() {
 		for (int i = 0; i < numberButtons.length; i++) {
 			numberButtons[i].setMinWidth(vBox.getPrefWidth());
@@ -197,14 +206,11 @@ public class CalculatorApplication extends Application {
 		
 
 	}
-
-	private void printBooleanValues() {
-		for (int i = 0; i < operations.length; i++) {
-			System.out.println(names[i]+": "+operations[i]);
-		}
-		System.out.println();
-	}
 	
+	/*
+	 *	Adds the event listeners to each button
+	 *	This allows the program to receive the value of the button the user pressed 
+	*/
 	private void addEventListeners() {
 		clear.setOnAction(new EventHandler<ActionEvent>() {
 		    @Override
@@ -325,7 +331,7 @@ public class CalculatorApplication extends Application {
 		
 	}
 	
-	
+	// main method launches the application
 	public static void main(String[] args) {
 		Application.launch(args);
 

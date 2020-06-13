@@ -6,8 +6,6 @@ import javafx.scene.control.TextArea;
 
 public class Calculation {
 	
-	//static Calculation calc = new Calculation();
-	
 	private DecimalFormat df = new DecimalFormat("0.0");
 	
 	public String add(double a, double b) {
