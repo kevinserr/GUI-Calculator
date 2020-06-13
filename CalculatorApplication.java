@@ -8,7 +8,6 @@ package calculator;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.NodeOrientation;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
@@ -22,14 +21,15 @@ public class CalculatorApplication extends Application {
 	String number1; 
 	String number2;
 	
-	// Booleans for operations
-	
+	boolean resultIsShown = false;
 
+	// Object for calculations 
 	Calculation calc = new Calculation();
 	
+	// new gridpane
 	GridPane pane = new GridPane();
 	
-	// text field
+	// screen is where the output and input will be shown
 	TextArea screen = new TextArea();
 	
 	// buttons used that are not numbers
@@ -52,8 +52,6 @@ public class CalculatorApplication extends Application {
 			clear, delete
 	};
 	
-	ButtonEvents be = new ButtonEvents(screen);
-	
 	Button[] symbolButtons = {
 		plus, minus, multiply, divide
 	};
@@ -67,17 +65,25 @@ public class CalculatorApplication extends Application {
 			isAddition, isSubstraction, 
 			isMultiplication, isDivision
 	};
+	
 	String[] names = {"Addition", "Subtraction", 
 			"Multiplication", "Divison"};
+	
 	public void start(Stage primaryStage) throws Exception {	
 		printBooleanValues();
 			
 		Scene scene = new Scene(pane, 300,450);
 		
+		scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
+		
 		vBox.setPrefWidth(75);
 		vBox.setPrefHeight(75);
 		
-		screen.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
+		// screen cannot be edited
+		screen.setEditable(false);
+		screen.setMouseTransparent(true);
+		screen.setFocusTraversable(false);
+		
 		//TODO Find a way to append text at the start of the text so that RIGHT_TO_LEFT works
 		pane.add(screen, 0, 0, 4, 1);
 		
@@ -86,7 +92,10 @@ public class CalculatorApplication extends Application {
 			
 		primaryStage.setTitle("Calculator");
 	
+		// calls methods populates the buttons
 		populateButtons();
+		
+		// calls method that adds the buttons to the scene
 		addButtonsToScene();
 		
 		setMinWidthAndHeight();
@@ -97,6 +106,8 @@ public class CalculatorApplication extends Application {
 	
 		primaryStage.setScene(scene);
 		
+		multiply.setId("multButton");
+		
 		
 		primaryStage.show();
 		
@@ -104,7 +115,7 @@ public class CalculatorApplication extends Application {
 	
 	private void populateButtons() {
 		String numbers= "0123456789";
-		//				 0123456789
+		
 		numberButtons = new Button[numbers.length()];
 		
 		for (int i = 0; i < numbers.length(); i++) {
@@ -202,6 +213,13 @@ public class CalculatorApplication extends Application {
 		    }
 		});
 		
+		decimal.setOnAction(new EventHandler<ActionEvent>() {
+		    @Override
+		    public void handle(ActionEvent event) {
+		    	screen.appendText(".");
+		    }
+		});
+		
 		delete.setOnAction(new EventHandler<ActionEvent>() {
 		    @Override
 		    public void handle(ActionEvent event) {
@@ -214,7 +232,12 @@ public class CalculatorApplication extends Application {
 		plusMinus.setOnAction(new EventHandler<ActionEvent>() {
 		    @Override
 		    public void handle(ActionEvent event) {
-		        screen.appendText("-");;
+		    	if(resultIsShown) {
+		    		screen.setText("");
+		    		resultIsShown = false;
+		    		System.out.println("Result within: "+resultIsShown);
+		    	}
+		        screen.appendText("-");
 		    }
 		});
 		
@@ -223,6 +246,11 @@ public class CalculatorApplication extends Application {
 			numberButtons[i].setOnAction(new EventHandler<ActionEvent>() {
 			    @Override
 			    public void handle(ActionEvent event) {
+			    	if(resultIsShown) {
+			    		screen.setText("");
+			    		resultIsShown = false;
+			    		System.out.println("Result within if statement"+resultIsShown);
+			    	}
 			    	screen.appendText(number);
 			    }
 			});
@@ -260,33 +288,37 @@ public class CalculatorApplication extends Application {
 		equals.setOnAction(new EventHandler<ActionEvent>() {
 		    @Override
 		    public void handle(ActionEvent event) {
-		    	number2 = screen.getText();
-		    	screen.setText("");
-		    	double num1 = Double.parseDouble(number1);
-		    	double num2 = Double.parseDouble(number2);
-		    	for (int i = 0; i < operations.length; i++) {
-					if(operations[i]) {
-						if(names[i].equals("Addition")) {
-							String sum = calc.add(num1, num2);
-							System.out.println(sum);
-							screen.setText(sum);
+		    	// checks to see if screen is not empty 
+		    	if(!screen.getText().equals("")) {
+			    	number2 = screen.getText();
+			    	screen.setText("");
+			    	double num1 = Double.parseDouble(number1);
+			    	double num2 = Double.parseDouble(number2);
+			    	for (int i = 0; i < operations.length; i++) {
+						if(operations[i]) 
+						{
+							if(names[i].equals("Addition")) {
+								String sum = calc.add(num1, num2);
+								//System.out.println(sum);
+								screen.setText(sum);
+							}
+							else if(names[i].equals("Subtraction")) {
+								System.out.println(calc.subtract(num1, num2));
+								screen.setText(calc.subtract(num1, num2));
+							}
+							else if(names[i].equals("Multiplication")) {
+								System.out.println(calc.multiply(num1, num2));
+								screen.setText(calc.multiply(num1, num2));
+							}
+							else if(names[i].equals("Divison")) {
+								System.out.println(calc.divide(num1, num2));
+								screen.setText(calc.divide(num1, num2));
+							}
+							resultIsShown = true;
+							
 						}
-						else if(names[i].equals("Subtraction")) {
-							System.out.println(calc.subtract(num1, num2));
-							screen.setText(calc.subtract(num1, num2));
-						}
-						else if(names[i].equals("Multiplication")) {
-							System.out.println(calc.multiply(num1, num2));
-							screen.setText(calc.multiply(num1, num2));
-						}
-						else if(names[i].equals("Divison")) {
-							System.out.println(calc.divide(num1, num2));
-							screen.setText(calc.multiply(num1, num2));
-						}
-						
 					}
-					
-				}
+		    	}
 		    }
 		});
 		

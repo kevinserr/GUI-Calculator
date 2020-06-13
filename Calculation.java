@@ -1,23 +1,29 @@
 package calculator;
 
+import java.text.DecimalFormat;
+
 import javafx.scene.control.TextArea;
 
 public class Calculation {
 	
+	//static Calculation calc = new Calculation();
+	
+	private DecimalFormat df = new DecimalFormat("0.0");
+	
 	public String add(double a, double b) {
-		return String.valueOf(a+b);
+		return String.valueOf(df.format(a+b));
 	}
 	
 	public String subtract(double a, double b) {
-		return String.valueOf(a-b);
+		return String.valueOf(df.format(a-b));
 	}
 	
 	public String multiply(double a, double b) {
-		return String.valueOf(a*b);
+		return String.valueOf(df.format(a*b));
 	}
 	
 	public String divide(double a, double b) {
-		return String.valueOf(a/b);
+		return String.valueOf(df.format(a/b));
 	}
 	
 	public void clearAllText(TextArea tx) {
@@ -29,7 +35,7 @@ public class Calculation {
 	}
 	
 	public static void main(String[] args) {
-		System.out.println(subtract(9,9));
+		//System.out.println(calc.add(9.89,9));
 	}
 	
 }
